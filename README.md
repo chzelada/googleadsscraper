@@ -6,5 +6,6 @@ If you try to make more than 30 searches **google will ban your ip** for 15 or 2
 You just need to input 2 varibles,
  
  **State:** state from where you want the search to be mode from
+ 
  **KeyWord:** Search term
 
