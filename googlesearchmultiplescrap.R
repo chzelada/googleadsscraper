@@ -5,7 +5,9 @@ library(dplyr)
 library(tm)
 library(wordcloud)
 library(regex)
-ua <- read_csv("~/Dropbox/Healtcare/adsScrap/ua.csv",col_names = FALSE)
+library(readr)
+ua <- read_csv("ua.csv",col_names = FALSE)
+uule <- read_csv("uule.csv")
 names(ua)<-c("id","string")
 clean_corpus <- function(corpus){
   corpus <- tm_map(corpus, stripWhitespace)
@@ -35,7 +37,7 @@ Stitles<-c()
 Surl<-c()
 Ssnippet<-c()
 n=1
-for(i in 1:100){
+for(i in 1:5){
   print(i)
   Sys.sleep(sample(1, 1) * 0.3)
   index<-sample(1:11,1)
@@ -89,42 +91,22 @@ for(i in 1:100){
   n=n+1
 }
 
-Wed22FLsup2<-list(url=Surl,
+ads_data <- list(url=Surl,
 ssnippet=Ssnippet,
 stitles=Stitles,
 aurl=AdsUrlTot,
 atitle=AdsTitleTol,
 asnippet=AdsSnippet,
-state = "FL",
-keyword="medicare supplemental",
+state = state,
+keyword=KeyWord,
 date = Sys.time(),
 searches = n
 )
 
-WordCloudData<-getWordCloud(unique(Tue21TXsup$asnippet))
+WordCloudData<-getWordCloud(unique(ads_data$asnippet))
 
 wordcloud(words=WordCloudData$word,freq=WordCloudData$freq, min.freq = 1,
           max.words=200, random.order=FALSE, rot.per=0.35, 
           colors=brewer.pal(8, "Dark2"))
 
-WordCloudData<-getWordCloud(unique(Wed22FLsup$asnippet))
-
-wordcloud(words=WordCloudData$word,freq=WordCloudData$freq, min.freq = 1,
-          max.words=200, random.order=FALSE, rot.per=0.35, 
-          colors=brewer.pal(8, "Dark2"))
-
-
-unique(AdsUrlTot)
-unique(AdsTitleTol)
-
-WordCloudData %>% arrange(desc(freq)) %>% head(10)
-table(Ssnippet) %>% View()
-
-
-table(Wed22FLsup2$aurl) %>% View()
-x<-Wed22FLsup$atitle %>% as.data.frame()
-names(x)<-"title"
-indesx<-sapply(Wed22FLsup2$asnippet,"grepl",pattern="[1]",USE.NAMES = FALSE,fixed=TRUE)
-Wed22FLsup2$asnippet[indesx]
-table(Wed22FLsup2$asnippet) %>% View()
 
